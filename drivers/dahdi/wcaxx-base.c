@@ -34,13 +34,6 @@
 #include <linux/firmware.h>
 #include <linux/crc32.h>
 
-/* Linux kernel 5.16 and greater has removed user-space headers from the kernel include path */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 16, 0)
-#include <asm/types.h>
-#else
-#include <stdbool.h>
-#endif
-
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 30)
 /* Define this if you would like to load the modules in parallel.  While this
  * can speed up loads when multiple cards handled by this driver are installed,
@@ -1457,12 +1450,14 @@ wcaxx_check_battery_lost(struct wcaxx *wc, struct wcaxx_module *const mod)
 	case BATTERY_UNKNOWN:
 		mod_hooksig(wc, mod, DAHDI_RXSIG_ONHOOK);
 		/* fallthrough */
+		fallthrough;
 	case BATTERY_PRESENT:
 		fxo->battery_state = BATTERY_DEBOUNCING_LOST;
 		fxo->battdebounce_timer = wc->framecount + battdebounce;
 		break;
 	case BATTERY_DEBOUNCING_LOST_FROM_PRESENT_ALARM:
 		/* fallthrough */
+		fallthrough;
 	case BATTERY_DEBOUNCING_LOST: /* Intentional drop through */
 		if (time_after(wc->framecount, fxo->battdebounce_timer)) {
 			if (debug) {
@@ -1568,6 +1563,7 @@ wcaxx_check_battery_present(struct wcaxx *wc, struct wcaxx_module *const mod)
 	case BATTERY_UNKNOWN:
 		mod_hooksig(wc, mod, DAHDI_RXSIG_OFFHOOK);
 		/* fallthrough */
+		fallthrough;
 	case BATTERY_LOST:
 		fxo->battery_state = BATTERY_DEBOUNCING_PRESENT;
 		fxo->battdebounce_timer = wc->framecount + battdebounce;
