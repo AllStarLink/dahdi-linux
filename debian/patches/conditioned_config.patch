@@ -1,0 +1,29 @@
+From: Tzafrir Cohen <tzafrir@debian.org>
+Subject: Add proper conditions for NET and PPP
+
+Make sure CONFIG_DAHDI_NET and CONFIG_DAHDI_PPP are only enabled if the
+kernel configuration supports them.
+
+Index: dahdi-linux/include/dahdi/dahdi_config.h
+===================================================================
+--- dahdi-linux.orig/include/dahdi/dahdi_config.h	2023-08-02 00:33:05.224646146 +0300
++++ dahdi-linux/include/dahdi/dahdi_config.h	2023-08-02 00:38:37.020657069 +0300
+@@ -79,15 +79,16 @@
+  * Uncomment CONFIG_DAHDI_NET to enable SyncPPP, CiscoHDLC, and Frame Relay
+  * support.
+  */
++#if defined(CONFIG_HDLC) || defined(CONFIG_HDLC_MODULE)
+ #define CONFIG_DAHDI_NET
+-#define CONFIG_DAHDI_PPP
++#endif
+ 
+ /*
+  * Uncomment for Generic PPP support (i.e. DAHDIRAS)
+  */
+ 
+ #if defined(CONFIG_PPP) || defined(CONFIG_PPP_MODULE)
+-/* #define CONFIG_DAHDI_PPP */
++#define CONFIG_DAHDI_PPP
+ #endif
+ 
+ /*

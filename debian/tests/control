@@ -1,0 +1,25 @@
+Test-Command: /usr/share/modass/module-assistant-autopkgtest dahdi
+Features: test-name=m-a-autopkgtest
+Depends:
+ dahdi-source,
+ module-assistant-autopkgtest,
+ linux-doc,
+Restrictions:
+ superficial,
+ needs-root,
+ breaks-testbed,
+ allow-stderr,
+
+Tests: dkms-modules
+Depends: dahdi-dkms, dahdi-linux, dkms, @recommends@
+# @recommends@: dkms recommends kernel headers.
+# The alternative would be to try and install them, and ten build and
+# install the dkms module in the script. But this is not a proper test
+# of how dkms should work.
+# And even then, the linux-headers get configured after dahdi-dkms, and
+# fail the test (and hense: skippable).
+Restrictions: needs-root, isolation-machine, skippable
+
+Tests: dynamic-loc-call
+Depends: asterisk, asterisk-dahdi, dahdi, dahdi-source, module-assistant
+Restrictions: needs-root, isolation-machine

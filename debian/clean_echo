@@ -1,0 +1,4 @@
+drivers/staging/echo/echo.ko
+drivers/staging/echo/*.o
+drivers/staging/echo/.echo*
+drivers/staging/echo/echo.mod*

@@ -1,0 +1,91 @@
+From: Tzafrir Cohen <tzafrir@debian.org>
+Subject: Avoid non-null array pointer check
+
+name and desc are struct members and thus ->name and ->desc cannot be
+null. Avoids an -Werrr=address error.
+
+The cleanup of the init function of wcte13xp-base.c and wcte43x-base.c
+was probably already buggy.
+
+Index: dahdi-linux/drivers/dahdi/xpp/xbus-core.c
+===================================================================
+--- dahdi-linux.orig/drivers/dahdi/xpp/xbus-core.c	2023-07-29 01:14:57.000000000 +0300
++++ dahdi-linux/drivers/dahdi/xpp/xbus-core.c	2023-07-29 01:25:36.899604046 +0300
+@@ -113,7 +113,7 @@
+ {
+ 	if (!xbus)
+ 		return -ENOENT;
+-	if (xbus->label && *(xbus->label)) {
++	if (*(xbus->label)) {
+ 		xbus_t *xbus_old;
+ 
+ 		XBUS_DBG(DEVICES, xbus, "Checking LABEL='%s'\n", xbus->label);
+Index: dahdi-linux/drivers/dahdi/dahdi-base.c
+===================================================================
+--- dahdi-linux.orig/drivers/dahdi/dahdi-base.c	2023-07-29 01:14:57.000000000 +0300
++++ dahdi-linux/drivers/dahdi/dahdi-base.c	2023-07-29 01:49:04.855650393 +0300
+@@ -926,12 +926,9 @@
+ 	if (!s)
+ 		return -ENODEV;
+ 
+-	if (s->name)
++	if (*(s->name))
+ 		seq_printf(sfile, "Span %d: %s ", s->spanno, s->name);
+-	if (s->desc)
+-		seq_printf(sfile, "\"%s\"", s->desc);
+-	else
+-		seq_printf(sfile, "\"\"");
++	seq_printf(sfile, "\"%s\"", s->desc);
+ 
+ 	if (dahdi_is_sync_master(s))
+ 		seq_printf(sfile, " (MASTER)");
+@@ -967,7 +964,7 @@
+ 	for (x = 0; x < s->channels; x++) {
+ 		struct dahdi_chan *chan = s->chans[x];
+ 
+-		if (chan->name)
++		if (*(chan->name))
+ 			seq_printf(sfile, "\t%4d %s ", chan->channo,
+ 					chan->name);
+ 
+Index: dahdi-linux/drivers/dahdi/dahdi_dynamic_ethmf.c
+===================================================================
+--- dahdi-linux.orig/drivers/dahdi/dahdi_dynamic_ethmf.c	2023-07-29 00:56:33.151546644 +0300
++++ dahdi-linux/drivers/dahdi/dahdi_dynamic_ethmf.c	2023-07-29 01:50:13.799652663 +0300
+@@ -535,7 +535,7 @@
+ 		kfree(z->msgbuf);
+ 		kfree(z);
+ 	} else {
+-		if (z && z->span && z->span->name) {
++		if (z && z->span) {
+ 			printk(KERN_ERR "Cannot find interface for %s\n",
+ 				z->span->name);
+ 		}
+Index: dahdi-linux/drivers/dahdi/wcte13xp-base.c
+===================================================================
+--- dahdi-linux.orig/drivers/dahdi/wcte13xp-base.c	2023-07-29 01:01:34.623556568 +0300
++++ dahdi-linux/drivers/dahdi/wcte13xp-base.c	2023-07-29 02:01:15.115674433 +0300
+@@ -2701,8 +2701,7 @@
+ 	return 0;
+ 
+ fail_exit:
+-	if (&wc->xb)
+-		wcxb_release(&wc->xb);
++	wcxb_release(&wc->xb);
+ 
+ 	free_wc(wc);
+ 	return res;
+Index: dahdi-linux/drivers/dahdi/wcte43x-base.c
+===================================================================
+--- dahdi-linux.orig/drivers/dahdi/wcte43x-base.c	2023-07-29 01:01:34.623556568 +0300
++++ dahdi-linux/drivers/dahdi/wcte43x-base.c	2023-07-29 02:03:55.203679702 +0300
+@@ -3514,8 +3514,7 @@
+ 	return 0;
+ 
+ fail_exit:
+-	if (&wc->xb)
+-		wcxb_release(&wc->xb);
++	wcxb_release(&wc->xb);
+ 
+ 	if (debug)
+ 		dev_info(&wc->xb.pdev->dev, "***At fail_exit in init_one***\n");

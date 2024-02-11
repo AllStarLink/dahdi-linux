@@ -1,0 +1,44 @@
+The firmware downloaders are extra kernel objects that are now required for
+the Hardware echo canceller support in some Digium cards (wctdm24xxp,
+wcte12xp). They are downloaded at build time. The makefile will build 
+with support for them if they were indeed downloaded.
+
+This patch removes this downloading and thus keeps those modules 
+DFSG-compliant. Unlike the Digium firmwares, this is a compile-time 
+decision and hence cannot be reverted once a dahdi-modules package is
+built.
+
+Index: dahdi-linux-2.11.1.0.20170917~dfsg/Makefile
+===================================================================
+--- dahdi-linux-2.11.1.0.20170917~dfsg.orig/Makefile
++++ dahdi-linux-2.11.1.0.20170917~dfsg/Makefile
+@@ -80,7 +80,7 @@ include/dahdi/version.h: FORCE
+ 	fi
+ 	@rm -f $@.tmp
+ 
+-prereq: include/dahdi/version.h firmware-loaders
++prereq: include/dahdi/version.h
+ 
+ stackcheck: $(CHECKSTACK) modules
+ 	objdump -d drivers/dahdi/*.ko drivers/dahdi/*/*.ko | $(CHECKSTACK)
+@@ -114,7 +114,7 @@ uninstall-firmware:
+ 	$(MAKE) -C drivers/dahdi/firmware hotplug-uninstall DESTDIR=$(DESTDIR)
+ 
+ firmware-loaders:
+-	$(MAKE) -C drivers/dahdi/firmware firmware-loaders
++	echo Disabled firmware download.
+ 
+ install-include:
+ 	for hdr in $(INST_HEADERS); do \
+Index: dahdi-linux-2.11.1.0.20170917~dfsg/build_tools/dkms-helper
+===================================================================
+--- dahdi-linux-2.11.1.0.20170917~dfsg.orig/build_tools/dkms-helper
++++ dahdi-linux-2.11.1.0.20170917~dfsg/build_tools/dkms-helper
+@@ -68,7 +68,6 @@ add() {
+             cp -f -r * /usr/src/dahdi-linux-${VERSION}/
+         fi
+     fi
+-    make -C /usr/src/dahdi-linux-${VERSION} install-firmware firmware-loaders
+     build_tools/dkms-helper generate_conf > /usr/src/dahdi-linux-${VERSION}/dkms.conf
+     echo $VERSION > /usr/src/dahdi-linux-${VERSION}/.version
+     ${DKMS} add -m dahdi-linux -v ${VERSION}

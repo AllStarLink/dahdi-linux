@@ -1,0 +1,11 @@
+*.debhelper.log
+*.debhelper
+*.substvars
+.debhelper/
+dahdi-dkms.install
+dahdi-dkms/
+dahdi-linux/
+dahdi-source/
+debhelper-build-stamp
+dkms.conf
+files
