@@ -5,14 +5,8 @@ file issues/bugs with that project from these packages.
 
 ## Building the .deb
 
-1. Download the latest release from https://github.com/asterisk/dahdi-linux
+1. Edit Makefile for the right version and release
 
-2. Rename the file to something like `dahdi-linux_3.3.0.orig.tar.gz`. Note
-the underscore and the .orig notation.
+2. `make debchange`
 
-3. Uncompress the file using `tar xvfz`
-
-4. Copy the `debian/` directory from this project to the `dahdi-linux-3.3.0`
-folder.
-
-5. Run `dpkg-buildpackage`
+3. `make deb`

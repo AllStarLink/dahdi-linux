@@ -1,2 +1,3 @@
 #version.patch
 no_firmware_download
+minimize-modules
