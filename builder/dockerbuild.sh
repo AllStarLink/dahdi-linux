@@ -72,6 +72,7 @@ PDIR=$(dirname $DIR)
 echo "PDIR: ${PDIR}"
 ALL_PKG_ROOT=$(dirname ${PDIR})
 echo "ALL_PKG_ROOT: ${ALL_PKG_ROOT}"
+echo "GH_REL: ${GH_REL}"
 
 D_TAG="dahdi-linux_builder.${OPERATING_SYSTEMS}.${ARCH}${REPO_ENV}"
 
