@@ -13,7 +13,12 @@ RUN addgroup --gid $GROUP_ID user; exit 0
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; exit 0
 
 # Install build dependencies
-RUN apt-get update && apt-get -y install \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y install \
+	apt-utils build-essential devscripts fakeroot debhelper git \
+    gh ca-certificates wget --no-install-recommends
+
+# Install build dependencies
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 	bzip2 asciidoc-base dh-dkms module-assistant tar debhelper wget \
     --no-install-recommends
 
