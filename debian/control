@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Debian VoIP Team <pkg-voip-maintainers@lists.alioth.debian.org>
 Uploaders: Tzafrir Cohen <tzafrir@debian.org>
 Build-Depends: debhelper-compat (= 12), bzip2, asciidoc-base | asciidoc,
+ wget,
  dh-dkms,
  module-assistant,
  tar (>= 1.28)
