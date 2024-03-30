@@ -14,7 +14,7 @@ RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; 
 
 # Install build dependencies
 RUN apt-get update && apt-get -y install \
-	bzip2, asciidoc-base, dh-dkms, module-assistant, tar, debhelper \
+	bzip2 asciidoc-base dh-dkms module-assistant tar debhelper \
     --no-install-recommends
 
 # Import entrypoint script
