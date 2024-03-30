@@ -22,6 +22,8 @@ while [[ $# -gt 0 ]]; do
       ;;
 	-*|--*|*)
       echo "Unknown option $1"
+	  shift
+      shift
       ;;
   esac
 done
