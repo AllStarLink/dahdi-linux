@@ -1,3 +1,4 @@
 #version.patch
 no_firmware_download
 minimize-modules
+autop_vox

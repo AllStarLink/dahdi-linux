@@ -1,0 +1,40 @@
+diff --git a/drivers/dahdi/dahdi-base.c b/drivers/dahdi/dahdi-base.c
+index 87177a6..2c8a86a 100644
+--- a/drivers/dahdi/dahdi-base.c
++++ b/drivers/dahdi/dahdi-base.c
+@@ -1137,7 +1137,7 @@ static void dahdi_check_conf(int x)
+ #endif
+ 
+ 	/* return if no valid conf number */
+-	if (x <= 0)
++    if ((x <= 0) || (x >= DAHDI_MAX_CONF))
+ 		return;
+ 
+ 	/* Return if there is no alias */
+@@ -1518,6 +1518,8 @@ static int dahdi_enable_hw_preechocan(struct dahdi_chan *chan)
+ {
+ 	int res;
+ 
++	if (is_pseudo_chan(chan)) 
++		return 0;
+ 	mutex_lock(&chan->mutex);
+ 	if (chan->ec_factory != &hwec_factory)
+ 		res = -ENODEV;
+@@ -1544,6 +1546,8 @@ static int dahdi_enable_hw_preechocan(struct dahdi_chan *chan)
+  */
+ static void dahdi_disable_hw_preechocan(struct dahdi_chan *chan)
+ {
++	if (is_pseudo_chan(chan)) 
++		return;
+ 	if (chan->span->ops->disable_hw_preechocan)
+ 		chan->span->ops->disable_hw_preechocan(chan);
+ }
+@@ -3228,7 +3232,7 @@ static int can_open_timer(void)
+ #endif
+ }
+ 
+-static unsigned int max_pseudo_channels = 512;
++static unsigned int max_pseudo_channels = 2500;
+ static unsigned int num_pseudo_channels;
+ 
+ /**
