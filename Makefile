@@ -29,7 +29,7 @@ debchange:
 debclean:
 	rm -rf ../$(PKGNAME)_$(RELVER)*
 	rm -rf ../$(PKGNAME)-$(RELVER)*
-	rm -rf ../$(PKGNAME)-dkms_$(RELVER)* ../$(PKGNAME)-source_$(RELVER)*
+	rm -rf ../dahdi-dkms_$(RELVER)* ../dahdi-source_$(RELVER)*
 	rm -rf debian/$(PKGNAME)
 	rm -f debian/files
 	rm -rf debian/.debhelper/
