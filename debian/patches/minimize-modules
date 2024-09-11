@@ -1,6 +1,7 @@
---- dahdi-linux-3.3.0/drivers/dahdi/Kbuild.orig	2024-02-12 19:38:13.088484407 -0500
-+++ dahdi-linux-3.3.0/drivers/dahdi/Kbuild	2024-02-12 19:38:42.568329105 -0500
-@@ -1,17 +1,17 @@
+diff -ur dahdi-linux-3.4.0.orig/drivers/dahdi/Kbuild dahdi-linux-3.4.0/drivers/dahdi/Kbuild
+--- dahdi-linux-3.4.0.orig/drivers/dahdi/Kbuild	2024-09-11 18:49:04.069771037 -0400
++++ dahdi-linux-3.4.0/drivers/dahdi/Kbuild	2024-09-11 18:51:12.244995557 -0400
+@@ -1,18 +1,18 @@
  obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI)			+= dahdi.o
 -#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_DUMMY)		+= dahdi_dummy.o
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_DYNAMIC)		+= dahdi_dynamic.o
@@ -19,16 +20,18 @@
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCT4XXP)		+= wct4xxp/
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTC4XXP)		+= wctc4xxp/
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTDM24XXP)	+= wctdm24xxp/
+-obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE12XP)		+= wcte12xp/
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE13XP)		+= wcte13xp.o
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_OCT612X)		+= oct612x/
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCT4XXP)		+= wct4xxp/
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTC4XXP)		+= wctc4xxp/
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTDM24XXP)	+= wctdm24xxp/
++#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE12XP)		+= wcte12xp/
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE13XP)		+= wcte13xp.o
  
  ifndef HOTPLUG_FIRMWARE
  ifneq (,$(filter y m,$(CONFIG_FW_LOADER)))
-@@ -28,7 +28,7 @@
+@@ -29,7 +29,7 @@
    CFLAGS_wcte13xp-base.o += -DHOTPLUG_FIRMWARE
  endif
  
@@ -37,7 +40,7 @@
  
  wcte43x-objs := wcte43x-base.o wcxb_spi.o wcxb.o wcxb_flash.o
  CFLAGS_wcte43x-base.o += -I$(src)/oct612x -I$(src)/oct612x/include -I$(src)/oct612x/octdeviceapi -I$(src)/oct612x/octdeviceapi/oct6100api
-@@ -36,7 +36,7 @@
+@@ -37,7 +37,7 @@
    CFLAGS_wcte43x-base.o += -DHOTPLUG_FIRMWARE
  endif
  
@@ -46,7 +49,7 @@
  
  wcaxx-objs := wcaxx-base.o wcxb_spi.o wcxb.o wcxb_flash.o
  CFLAGS_wcaxx-base.o += -I$(src)/oct612x/ -I$(src)/oct612x/include -I$(src)/oct612x/octdeviceapi -I$(src)/oct612x/octdeviceapi/oct6100api
-@@ -44,20 +44,20 @@
+@@ -45,9 +45,9 @@
    CFLAGS_wcaxx-base.o += -DHOTPLUG_FIRMWARE
  endif
  
@@ -57,7 +60,10 @@
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_VOICEBUS)		+= voicebus/
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCB4XXP)		+= wcb4xxp/
  
- 
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCT1XXP)		+= wct1xxp.o
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE11XP)		+= wcte11xp.o
+@@ -55,13 +55,13 @@
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCFXO)		+= wcfxo.o
  endif
  
 -obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_XPP)		+= xpp/
@@ -74,5 +80,5 @@
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_ECHOCAN_KB1)	+= dahdi_echocan_kb1.o
 +#obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_ECHOCAN_MG2)	+= dahdi_echocan_mg2.o
  
- obj-m += $(DAHDI_MODULES_EXTRA)
- 
+ ifdef CONFIG_PCI
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_OPVXA1200)		+= opvxa1200/

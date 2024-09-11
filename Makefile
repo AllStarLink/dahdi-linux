@@ -1,6 +1,6 @@
 EPOCHVER = 1:
-RELVER = 3.3.0
-DEBVER = 5+asl
+RELVER = 3.4.0
+DEBVER = 1+asl
 PKGNAME = dahdi-linux
 ifndef ${RELPLAT}
 RELPLAT = deb$(shell lsb_release -rs 2> /dev/null)
