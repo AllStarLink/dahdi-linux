@@ -1,6 +1,6 @@
 EPOCHVER = 1:
 RELVER = 3.4.0
-DEBVER = 2+asl
+DEBVER = 3+asl
 PKGNAME = dahdi-linux
 ifndef ${RELPLAT}
 RELPLAT = deb$(shell lsb_release -rs 2> /dev/null)
@@ -17,9 +17,7 @@ deb:
 	debchange --distribution stable --package $(PKGNAME) \
         --newversion $(EPOCHVER)$(RELVER)-$(DEBVER).$(RELPLAT) \
 		"Autobuild of $(EPOCHVER)$(RELVER)-$(DEBVER) for $(RELPLAT)"
-	( cd ../dahdi-linux-$(RELVER) && \
-		echo $(RELVER).$(DEBVER) > .version && \
-		debuild -uc -us )
+	cd ../dahdi-linux-$(RELVER) && debuild -uc -us
 	git checkout debian/changelog
 
 debchange:
