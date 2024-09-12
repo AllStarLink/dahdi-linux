@@ -1,6 +1,6 @@
 EPOCHVER = 1:
 RELVER = 3.4.0
-DEBVER = 3+asl
+DEBVER = 4+asl
 PKGNAME = dahdi-linux
 ifndef ${RELPLAT}
 RELPLAT = deb$(shell lsb_release -rs 2> /dev/null)
@@ -13,6 +13,9 @@ deb:
 		wget -O $(PKGNAME)_$(RELVER).orig.tar.gz \
 			https://github.com/asterisk/dahdi-linux/releases/download/v$(RELVER)/$(PKGNAME)-$(RELVER).tar.gz && \
 		tar xvfz dahdi-linux_$(RELVER).orig.tar.gz && \
+		echo "$(RELVER)-$(DEBVER)" > dahdi-linux-$(RELVER)/.version && \
+		rm dahdi-linux_$(RELVER).orig.tar.gz && \
+		tar cvfz dahdi-linux_$(RELVER).orig.tar.gz dahdi-linux-$(RELVER) && \
 		cp -r dahdi-linux/debian dahdi-linux-$(RELVER) )
 	debchange --distribution stable --package $(PKGNAME) \
         --newversion $(EPOCHVER)$(RELVER)-$(DEBVER).$(RELPLAT) \

@@ -1,8 +1,8 @@
-dahdi-linux (1:3.4.0-2+asl) unstable; urgency=medium
+dahdi-linux (1:3.4.0-4+asl) unstable; urgency=medium
 
   * Fix version string
 
- -- Jason McCormick <jason@mfamily.org>  Wed, 11 Sep 2024 19:24:30 -0400
+ -- Jason McCormick <jason@mfamily.org>  Wed, 11 Sep 2024 20:23:16 -0400
 
 dahdi-linux (1:3.4.0-1+asl) unstable; urgency=medium
 
