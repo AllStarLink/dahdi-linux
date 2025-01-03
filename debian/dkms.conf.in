@@ -1,7 +1,7 @@
 PACKAGE_VERSION="#CVERSION#"
 
 # PCI is required for most devices. USB is used by xpp/ and icE1usb.
-BUILD_EXCLUSIVE_CONFIG="CONFIG_PCI CONFIG_USB"
+#BUILD_EXCLUSIVE_CONFIG="CONFIG_PCI CONFIG_USB"
 
 # Items below here should not have to change with each driver version
 PACKAGE_NAME="dahdi"
