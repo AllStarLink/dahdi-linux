@@ -2,6 +2,5 @@
 no_firmware_download
 minimize-modules
 autop_vox
-58_rhel_guard
 kernel_6_11_sysfs
 66_empty_if
