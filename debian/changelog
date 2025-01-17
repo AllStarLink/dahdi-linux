@@ -1,3 +1,9 @@
+dahdi-linux (1:3.4.0-6+asl) unstable; urgency=medium
+
+  * Backport PRs 58, 64, 66 for kernel 6.11 support 
+
+ -- Jason McCormick <jason@mfamily.org>  Fri, 17 Jan 2025 18:03:44 -0500
+
 dahdi-linux (1:3.4.0-5+asl) unstable; urgency=medium
 
   * Remove BUILD_EXCLUSIVE_CONFIG for PCI/USB

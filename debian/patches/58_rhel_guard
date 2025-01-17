@@ -1,0 +1,124 @@
+From cff5c1487e59b07407377fc009c1620261d1d926 Mon Sep 17 00:00:00 2001
+From: InterLinked1 <24227567+InterLinked1@users.noreply.github.com>
+Date: Thu, 19 Sep 2024 20:03:28 -0400
+Subject: [PATCH] dahdi-sysfs, xbus-sysfs: Fix RHEL conditional compilation
+ checks.
+
+Commit d7bbc8a96fe767bc4eee15dd43170f298282a4c3 introduced
+a regression for non-RHEL distros using kernels older than
+6.3.0 by not properly guarding usage of the RHEL macros.
+Even though the logic short-circuits, undefined macros can
+still be used this way, so add another #if block to prevent
+using undefined macros.
+
+Resolves: #51
+---
+ drivers/dahdi/dahdi-sysfs-chan.c | 11 +++++++----
+ drivers/dahdi/dahdi-sysfs.c      | 22 ++++++++++++++--------
+ drivers/dahdi/xpp/xbus-sysfs.c   | 11 +++++++----
+ 3 files changed, 28 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/dahdi/dahdi-sysfs-chan.c b/drivers/dahdi/dahdi-sysfs-chan.c
+index 09d73172..f4d287b3 100644
+--- a/drivers/dahdi/dahdi-sysfs-chan.c
++++ b/drivers/dahdi/dahdi-sysfs-chan.c
+@@ -484,15 +484,18 @@ int __init dahdi_sysfs_chan_init(const struct file_operations *fops)
+ 	should_cleanup.channel_driver = 1;
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 4, 0)
+-#if defined RHEL_RELEASE_VERSION && (RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5,14,0) && \
+-	RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9,4)
++#if defined(RHEL_RELEASE_VERSION) && defined(RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
++#if RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9, 4)
+ 	dahdi_class = class_create("dahdi");
+ #else
+ 	dahdi_class = class_create(THIS_MODULE, "dahdi");
+-#endif
++#endif /* RHEL_RELEASE_CODE */
++#else
++	dahdi_class = class_create(THIS_MODULE, "dahdi");
++#endif /* RHEL_RELEASE_VERSION */
+ #else
+ 	dahdi_class = class_create("dahdi");
+-#endif
++#endif /* LINUX_VERSION_CODE */
+ 	if (IS_ERR(dahdi_class)) {
+ 		res = PTR_ERR(dahdi_class);
+ 		dahdi_err("%s: class_create(dahi_chan) failed. Error: %d\n",
+diff --git a/drivers/dahdi/dahdi-sysfs.c b/drivers/dahdi/dahdi-sysfs.c
+index 7477ebc9..7b302c6f 100644
+--- a/drivers/dahdi/dahdi-sysfs.c
++++ b/drivers/dahdi/dahdi-sysfs.c
+@@ -69,15 +69,18 @@ static inline struct dahdi_span *dev_to_span(const struct device *dev)
+ 	} while (0)
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
+-#if defined RHEL_RELEASE_VERSION && (RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5,14,0) && \
+-        RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9,4)
++#if defined(RHEL_RELEASE_VERSION) && defined(RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
++#if RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9, 4)
+ static int span_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+ #else
+ static int span_uevent(struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* RHEL_RELEASE_CODE */
++#else
++static int span_uevent(struct device *dev, struct kobj_uevent_env *kenv)
++#endif /* RHEL_RELEASE_VERSION */
+ #else
+ static int span_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* LINUX_VERSION_CODE */
+ {
+ 	struct dahdi_span *span;
+ 
+@@ -448,15 +451,18 @@ static inline struct dahdi_device *to_ddev(const struct device *dev)
+ 	} while (0)
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
+-#if defined RHEL_RELEASE_VERSION && (RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5,14,0) && \
+-        RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9,4)
++#if defined(RHEL_RELEASE_VERSION) && defined(RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
++#if RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9, 4)
+ static int device_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+ #else
+ static int device_uevent(struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* RHEL_RELEASE_CODE */
++#else
++static int device_uevent(struct device *dev, struct kobj_uevent_env *kenv)
++#endif /* RHEL_RELEASE_VERSION */
+ #else
+ static int device_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* LINUX_VERSION_CODE */
+ {
+ 	struct dahdi_device *ddev;
+ 
+diff --git a/drivers/dahdi/xpp/xbus-sysfs.c b/drivers/dahdi/xpp/xbus-sysfs.c
+index 177048b2..897c86d8 100644
+--- a/drivers/dahdi/xpp/xbus-sysfs.c
++++ b/drivers/dahdi/xpp/xbus-sysfs.c
+@@ -420,15 +420,18 @@ static int astribank_match(struct device *dev, struct device_driver *driver)
+ 
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 0)
+-#if defined RHEL_RELEASE_VERSION && (RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5,14,0) && \
+-	RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9,4)
++#if defined(RHEL_RELEASE_VERSION) && defined(RHEL_RELEASE_CODE) && LINUX_VERSION_CODE >= KERNEL_VERSION(5, 14, 0)
++#if RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(9, 4)
+ static int astribank_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+ #else
+ static int astribank_uevent(struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* RHEL_RELEASE_CODE */
++#else
++static int astribank_uevent(struct device *dev, struct kobj_uevent_env *kenv)
++#endif /* RHEL_RELEASE_VERSION */
+ #else
+ static int astribank_uevent(const struct device *dev, struct kobj_uevent_env *kenv)
+-#endif
++#endif /* LINUX_VERSION_CODE */
+ {
+ 	xbus_t *xbus;
+ 	extern char *initdir;
