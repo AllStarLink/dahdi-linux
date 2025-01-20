@@ -1,0 +1,32 @@
+From a1f6aa718e587481a3998642aed7a1246f114583 Mon Sep 17 00:00:00 2001
+From: InterLinked1 <24227567+InterLinked1@users.noreply.github.com>
+Date: Mon, 23 Sep 2024 19:14:44 -0400
+Subject: [PATCH] xpp: Add braces around empty if statements.
+
+Avoid compilation failure on modern kernels by adding braces
+around empty if body.
+
+Resolves: #65
+---
+ drivers/dahdi/xpp/card_fxs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dahdi/xpp/card_fxs.c b/drivers/dahdi/xpp/card_fxs.c
+index bb1c169f3..d4383aa4e 100644
+--- a/drivers/dahdi/xpp/card_fxs.c
++++ b/drivers/dahdi/xpp/card_fxs.c
+@@ -1169,10 +1169,12 @@ static int set_vmwi(xpd_t *xpd, int pos, unsigned long arg)
+ 			    "%s: VMWI(hvdc) is not implemented yet. Ignored.\n",
+ 			    __func__);
+ 	}
+-	if (VMWI_TYPE(priv, pos, HVAC))
++	if (VMWI_TYPE(priv, pos, HVAC)) {
+ 		;		/* VMWI_NEON */
+-	if (priv->vmwisetting[pos].vmwi_type == 0)
++	}
++	if (priv->vmwisetting[pos].vmwi_type == 0) {
+ 		;		/* Disable VMWI */
++	}
+ 	priv->vmwisetting[pos] = vmwisetting;
+ 	set_vm_led_mode(xpd->xbus, xpd, pos, PHONEDEV(xpd).msg_waiting[pos]);
+ 	return 0;

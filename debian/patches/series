@@ -2,3 +2,5 @@
 no_firmware_download
 minimize-modules
 autop_vox
+kernel_6_11_sysfs
+66_empty_if
