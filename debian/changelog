@@ -1,3 +1,9 @@
+dahdi-linux (1:3.4.0-8.asl) unstable; urgency=medium
+
+  * Fix packaging changelog bug
+
+ -- Jason McCormick <jason@mfamily.org>  Sun, 10 Aug 2025 19:33:56 -0400
+
 dahdi-linux (1:3.4.0-7.asl) unstable; urgency=medium
 
   * Change package format release pattern

@@ -1,15 +1,20 @@
 EPOCHVER = 1:
 RELVER = 3.4.0
-DEBVER = 7.asl
+DEBVER = 8.asl
 PKGNAME = dahdi-linux
 RELPLAT ?= deb$(shell lsb_release -rs 2> /dev/null)
 
 deb:	debprep
+	( cd ../dahdi-linux-$(RELVER) && \
 	debchange --distribution stable --package $(PKGNAME) \
         --newversion $(EPOCHVER)$(RELVER)-$(DEBVER).$(RELPLAT) \
-		"Autobuild of $(EPOCHVER)$(RELVER)-$(DEBVER) for $(RELPLAT)"
-	cd ../dahdi-linux-$(RELVER) && debuild -uc -us
-	git checkout debian/changelog
+		"Autobuild of $(EPOCHVER)$(RELVER)-$(DEBVER) for $(RELPLAT)" \
+	&& debuild -uc -us )
+#	git checkout debian/changelog
+
+debchange:
+	debchange -v $(EPOCHVER)$(RELVER)-$(DEBVER)
+	debchange -r
 
 debprep:	debclean
 	( cd .. && \
@@ -22,9 +27,6 @@ debprep:	debclean
 		rm dahdi-linux_$(RELVER).orig.tar.gz && \
 		tar cvfz dahdi-linux_$(RELVER).orig.tar.gz dahdi-linux-$(RELVER) && \
 		cp -r dahdi-linux/debian dahdi-linux-$(RELVER) )
-debchange:
-	debchange -v $(EPOCHVER)$(RELVER)-$(DEBVER)
-	debchange -r
 
 debclean:
 	rm -rf ../$(PKGNAME)_$(RELVER)*
