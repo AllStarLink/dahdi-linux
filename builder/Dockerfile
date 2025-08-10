@@ -20,6 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y install \
 # Install build dependencies
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 	bzip2 asciidoc-base dh-dkms module-assistant tar debhelper wget \
+	libdistro-info-perl libterm-readline-gnu-perl  libterm-readline-perl-perl \
     --no-install-recommends
 
 # Import entrypoint script
