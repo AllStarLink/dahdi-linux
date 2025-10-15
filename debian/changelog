@@ -1,3 +1,10 @@
+dahdi-linux (1:3.4.0-10.asl) unstable; urgency=medium
+
+  * More dependency changes for Trixie. See 
+    https://github.com/AllStarLink/dahdi-linux/issues/4
+
+ -- Jason McCormick <jason@mfamily.org>  Wed, 15 Oct 2025 11:04:01 -0400
+
 dahdi-linux (1:3.4.0-9.asl) unstable; urgency=medium
 
   * Update dependencies to support Trixie properly
