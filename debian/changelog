@@ -1,3 +1,9 @@
+dahdi-linux (1:3.4.0-11.asl) unstable; urgency=medium
+
+  * Break apart package depdencies to allow buildling w/o kernels 
+
+ -- Helium <jason@mfamily.org>  Mon, 09 Mar 2026 15:29:42 -0400
+
 dahdi-linux (1:3.4.0-10.asl) unstable; urgency=medium
 
   * More dependency changes for Trixie. See 
